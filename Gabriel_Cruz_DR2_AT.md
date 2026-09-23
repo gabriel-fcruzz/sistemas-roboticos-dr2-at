@@ -2,6 +2,7 @@
 <h1>INSTITUTO INFNET</h1>
 <h2>SISTEMAS ROBÓTICOS</h2>
 <h3>VISÃO COMPUTACIONAL COM OPENCV (DR2)</h3>
+<p class="professor">PROFESSOR: VITOR AMADEU</p>
 <p class="autor">GABRIEL CRUZ FERREIRA</p>
 <h2 class="titulo-at">AT — ASSESSMENT</h2>
 <p class="subtitulo">Relatório técnico: pipeline de percepção visual —
