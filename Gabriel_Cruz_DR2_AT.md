@@ -821,7 +821,7 @@ garantia de prazo.
 O código-fonte e as evidências em **resolução original** — imagens PNG sem perdas
 e vídeos na qualidade de gravação — estão publicados em:
 
-**REPOSITORIO_URL**
+**https://github.com/gabriel-fcruzz/sistemas-roboticos-dr2-at**
 
 O pacote entregue contém os mesmos arquivos, com imagens e vídeos recomprimidos
 para caber no limite de 20 MB da plataforma: JPG com qualidade 90 e largura
