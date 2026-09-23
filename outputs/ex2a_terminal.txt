@@ -1,0 +1,174 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790142559.660472   25196 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790142561.400557   25196 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING:tensorflow:TensorFlow GPU support is not available on native Windows for TensorFlow >= 2.11. Even if CUDA/cuDNN are installed, GPU will not be used. Please use WSL2 or the TensorFlow-DirectML plugin.
+
+====================================================================
+1) MODELOS
+====================================================================
+MobileNetV2: 3.538.984 parâmetros
+  arquivo Keras (.keras) :   14.05 MB
+  arquivo TFLite         :   13.35 MB
+  camadas vistas pelo OpenCV DNN: 100
+
+====================================================================
+2) INFERÊNCIA NAS 12 IMAGENS (top-3 dos dois backends)
+====================================================================
+
+920_traffic_light.jpg  (esperado: traffic_light)
+  OpenCV DNN  top-3: traffic_light 99.1%, sunglasses 0.1%, school_bus 0.0%
+  Keras       top-3: traffic_light 99.0%, sunglasses 0.1%, school_bus 0.0%
+
+919_street_sign.jpg  (esperado: street_sign)
+  OpenCV DNN  top-3: street_sign 95.1%, pole 0.5%, scoreboard 0.5%
+  Keras       top-3: street_sign 96.4%, pole 0.4%, scoreboard 0.3%
+
+779_school_bus.jpg  (esperado: school_bus)
+  OpenCV DNN  top-3: school_bus 75.5%, minibus 4.7%, passenger_car 1.9%
+  Keras       top-3: school_bus 70.7%, minibus 6.0%, passenger_car 2.3%
+
+817_sports_car.jpg  (esperado: sports_car)
+  OpenCV DNN  top-3: sports_car 71.0%, racer 10.7%, convertible 4.4%
+  Keras       top-3: sports_car 71.4%, racer 9.3%, convertible 6.9%
+
+665_moped.jpg  (esperado: moped)
+  OpenCV DNN  top-3: moped 92.3%, motor_scooter 4.3%, restaurant 0.4%
+  Keras       top-3: moped 93.7%, motor_scooter 3.3%, restaurant 0.6%
+
+671_mountain_bike.jpg  (esperado: mountain_bike)
+  OpenCV DNN  top-3: mountain_bike 77.8%, tricycle 12.2%, unicycle 1.5%
+  Keras       top-3: mountain_bike 79.5%, tricycle 10.3%, unicycle 1.3%
+
+703_park_bench.jpg  (esperado: park_bench)
+  OpenCV DNN  top-3: park_bench 64.8%, lakeside 3.0%, paddle 1.8%
+  Keras       top-3: park_bench 66.1%, lakeside 6.9%, dam 1.6%
+
+555_fire_engine.jpg  (esperado: fire_engine)
+  OpenCV DNN  top-3: fire_engine 66.6%, Model_T 11.5%, jeep 1.7%
+  Keras       top-3: fire_engine 64.8%, Model_T 13.7%, tow_truck 1.5%
+
+879_umbrella.jpg  (esperado: umbrella)
+  OpenCV DNN  top-3: umbrella 97.2%, bonnet 1.7%, shopping_basket 0.2%
+  Keras       top-3: umbrella 96.7%, bonnet 1.9%, poncho 0.1%
+
+207_golden_retriever.jpg  (esperado: golden_retriever)
+  OpenCV DNN  top-3: golden_retriever 59.5%, Saluki 5.5%, Chesapeake_Bay_retriever 2.9%
+  Keras       top-3: golden_retriever 63.0%, Saluki 3.4%, Chesapeake_Bay_retriever 2.2%
+
+281_tabby.jpg  (esperado: tabby)
+  OpenCV DNN  top-3: Egyptian_cat 55.0%, tiger_cat 19.3%, tabby 17.9%
+  Keras       top-3: Egyptian_cat 55.9%, tabby 20.9%, tiger_cat 16.8%
+
+504_coffee_mug.jpg  (esperado: coffee_mug)
+  OpenCV DNN  top-3: coffee_mug 85.3%, cup 3.5%, coffeepot 0.9%
+  Keras       top-3: coffee_mug 86.2%, cup 3.9%, coffeepot 0.7%
+
+Predição top-1 por imagem
++------------------+------------------+-------+-----+------------------+-------+-----+
+| esperado         | OpenCV top-1     | conf  | ok  | Keras top-1      | conf  | ok  |
++------------------+------------------+-------+-----+------------------+-------+-----+
+| traffic_light    | traffic_light    | 99.1% | sim | traffic_light    | 99.0% | sim |
+| street_sign      | street_sign      | 95.1% | sim | street_sign      | 96.4% | sim |
+| school_bus       | school_bus       | 75.5% | sim | school_bus       | 70.7% | sim |
+| sports_car       | sports_car       | 71.0% | sim | sports_car       | 71.4% | sim |
+| moped            | moped            | 92.3% | sim | moped            | 93.7% | sim |
+| mountain_bike    | mountain_bike    | 77.8% | sim | mountain_bike    | 79.5% | sim |
+| park_bench       | park_bench       | 64.8% | sim | park_bench       | 66.1% | sim |
+| fire_engine      | fire_engine      | 66.6% | sim | fire_engine      | 64.8% | sim |
+| umbrella         | umbrella         | 97.2% | sim | umbrella         | 96.7% | sim |
+| golden_retriever | golden_retriever | 59.5% | sim | golden_retriever | 63.0% | sim |
+| tabby            | Egyptian_cat     | 55.0% | NAO | Egyptian_cat     | 55.9% | NAO |
+| coffee_mug       | coffee_mug       | 85.3% | sim | coffee_mug       | 86.2% | sim |
++------------------+------------------+-------+-----+------------------+-------+-----+
+
+====================================================================
+3) LATÊNCIA
+====================================================================
+Latência por imagem (15 repetições, 5 de aquecimento)
++--------------------------------+------------+-------------+
+| operação                       | média (ms) | desvio (ms) |
++--------------------------------+------------+-------------+
+| OpenCV DNN: blobFromImage      | 0.17       | -           |
+| OpenCV DNN: forward            | 7.06       | 0.90        |
+| Keras: preprocess              | 0.22       | -           |
+| Keras: chamada direta model(x) | 116.80     | 4.92        |
+| Keras: model.predict(x)        | 65.43      | 3.41        |
+| Keras: tf.function compilada   | 13.87      | 0.60        |
++--------------------------------+------------+-------------+
+
+A latência do Keras varia com a forma de chamar a rede; a melhor
+variante medida nesta máquina foi tf.function (13.87 ms), e é ela que vai para a tabela final.
+A chamada direta model(x) em modo eager paga verificação de tipos e
+construção de contexto a cada execução, o que aqui a deixou mais lenta
+que predict(); em outras máquinas a ordem pode se inverter, e é por
+isso que a medição precisa ser feita no hardware de destino.
+
+====================================================================
+4) MEMÓRIA (processos separados)
+====================================================================
+Memória residente do processo
++------------+------------+-------------+--------------+
+| backend    | antes (MB) | depois (MB) | aumento (MB) |
++------------+------------+-------------+--------------+
+| OpenCV DNN | 37.4       | 81.8        | 44.4         |
+| Keras      | 37.4       | 437.0       | 399.6        |
++------------+------------+-------------+--------------+
+
+====================================================================
+5) TABELA COMPARATIVA FINAL
+====================================================================
++----------------------------------+---------------+--------------------------+----------------+----------------+----------------------+
+| backend                          | latência (ms) | memória do processo (MB) | acurácia top-1 | acurácia top-3 | modelo em disco (MB) |
++----------------------------------+---------------+--------------------------+----------------+----------------+----------------------+
+| OpenCV DNN (TFLite)              | 7.06          | 81.8                     | 91.7% (11/12)  | 100.0%         | 13.35                |
+| Keras / TensorFlow (tf.function) | 13.87         | 437.0                    | 91.7% (11/12)  | 100.0%         | 14.05                |
++----------------------------------+---------------+--------------------------+----------------+----------------+----------------------+
+
+Concordância do top-1 entre os backends: 12/12
+Maior diferença absoluta de probabilidade: 4.77 pontos percentuais (média 2.16)
+Interpretação: os dois backends concordam em 100% das classes, e a acurácia
+top-1 e top-3 é idêntica; logo a escolha do backend não altera a decisão do
+sistema. As confianças, porém, NÃO são bit a bit iguais: a diferença chega a
+alguns pontos percentuais. Isso não é ruído de arredondamento simples, e sim
+efeito de implementações distintas dos mesmos operadores (fusão de
+convolução com BatchNorm, ordem de acumulação, uso de oneDNN no TensorFlow
+contra os kernels próprios do runtime TFLite). A consequência prática é
+concreta: um limiar de confiança calibrado no Keras precisa ser reavaliado
+depois da conversão para o backend de produção, porque o mesmo objeto pode
+cair de 70,7% para 75,5%.
+
+====================================================================
+6) QUANDO PREFERIR O MÓDULO DNN DO OPENCV
+====================================================================
+A favor do OpenCV DNN em sistemas embarcados:
+  - Pegada de memória: o processo do OpenCV fica na casa de dezenas de MB,
+    contra centenas de MB do TensorFlow, que carrega grafo, otimizadores e
+    todo o runtime. Em placas com 512 MB a 1 GB de RAM isso decide se o
+    programa roda.
+  - Dependência única: a mesma biblioteca que já faz captura, undistort,
+    filtros e desenho também faz a inferência. Não é preciso instalar um
+    framework de treino no robô, o que reduz imagem de sistema, tempo de
+    build e superfície de atualização.
+  - Sem cópia entre mundos: o frame já é um cv2.Mat; blobFromImage consome a
+    matriz diretamente, sem conversão para tensor de outro framework.
+  - Troca de acelerador por duas linhas: setPreferableTarget permite CPU,
+    OpenCL, CUDA ou VPU sem alterar o resto do código.
+  - Tempo de inicialização menor, o que importa em robôs que ligam e precisam
+    perceber o ambiente em poucos segundos.
+
+A favor do Keras/TensorFlow:
+  - Treinamento e fine-tuning: o OpenCV DNN só faz forward pass.
+  - Camadas e operações recentes: o importador do OpenCV falha em modelos com
+    operadores fora do conjunto suportado; o framework de origem sempre roda.
+  - Ferramental de experimentação: callbacks, métricas, augmentation, TensorBoard.
+  - Quantização e conversão: o próprio TFLite, com quantização int8, costuma
+    superar o OpenCV DNN em CPU de baixo custo.
+
+Regra prática adotada neste trabalho: treinar e validar no Keras, exportar e
+EXECUTAR no OpenCV DNN (ou TFLite) no robô.
+
+ARQUIVOS GERADOS
+  outputs/ex2a_mosaico_top3.jpg  (painel com as 12 imagens)
+  outputs/ex2a_top3_<classe>.jpg (uma por imagem, dois backends)
+  outputs/ex2a_tabela_comparativa.md

@@ -1,0 +1,245 @@
+[
+  {
+    "etapa": "Pré-processamento",
+    "tecnica": "Segmentação HSV + morfologia",
+    "ms": 2.28,
+    "memoria_mb": null,
+    "qualidade": "81% das regiões candidatas descartadas por filtros geométricos",
+    "complexidade": "O(n) por pixel, sem treino",
+    "fonte": "AT ex2b.ipynb (média de 30 frames)"
+  },
+  {
+    "etapa": "Pré-processamento",
+    "tecnica": "Segmentação HSV da via (asfalto)",
+    "ms": 3.4,
+    "memoria_mb": null,
+    "qualidade": "30,8% da imagem marcada como navegável; não separa via de calçada",
+    "complexidade": "O(n) por pixel, sem treino",
+    "fonte": "AT ex4a.py (cena campus_via)"
+  },
+  {
+    "etapa": "Calibração",
+    "tecnica": "calibrateCamera (24 imagens)",
+    "ms": null,
+    "memoria_mb": null,
+    "qualidade": "erro de reprojeção 0,0202 px; erro de fx 0,078%",
+    "complexidade": "offline, uma vez por câmera",
+    "fonte": "AT ex1a.py"
+  },
+  {
+    "etapa": "Calibração",
+    "tecnica": "undistort por frame",
+    "ms": 6.45,
+    "memoria_mb": null,
+    "qualidade": "corrige deslocamento radial de até 27 px na borda",
+    "complexidade": "O(n) por pixel, mapas pré-calculáveis",
+    "fonte": "AT ex2b.ipynb"
+  },
+  {
+    "etapa": "Pose",
+    "tecnica": "solvePnP + projectPoints (tabuleiro)",
+    "ms": 0.27,
+    "memoria_mb": null,
+    "qualidade": "erro de translação 0,31 mm; rotação 0,028°",
+    "complexidade": "iterativo sobre 42 pontos",
+    "fonte": "AT ex1b.py"
+  },
+  {
+    "etapa": "Características",
+    "tecnica": "ORB (1000 keypoints)",
+    "ms": 5.75,
+    "memoria_mb": null,
+    "qualidade": "descritor binário de 32 bytes",
+    "complexidade": "FAST + BRIEF, sem treino",
+    "fonte": "TP2 ex3a.py"
+  },
+  {
+    "etapa": "Características",
+    "tecnica": "AKAZE",
+    "ms": 29.4,
+    "memoria_mb": null,
+    "qualidade": "2666 keypoints, descritor de 61 bytes",
+    "complexidade": "difusão não linear",
+    "fonte": "TP2 ex3a.py"
+  },
+  {
+    "etapa": "Características",
+    "tecnica": "SIFT",
+    "ms": 52.4,
+    "memoria_mb": null,
+    "qualidade": "2419 keypoints, descritor de 128 floats",
+    "complexidade": "pirâmide DoG",
+    "fonte": "TP2 ex3a.py"
+  },
+  {
+    "etapa": "Detecção clássica",
+    "tecnica": "HOG+SVM pré-treinado (rápido)",
+    "ms": 24.9,
+    "memoria_mb": null,
+    "qualidade": "1,39 detecção/frame",
+    "complexidade": "janela deslizante, 1 escala grossa",
+    "fonte": "TP3 ex1a.py"
+  },
+  {
+    "etapa": "Detecção clássica",
+    "tecnica": "HOG+SVM pré-treinado (preciso)",
+    "ms": 202.3,
+    "memoria_mb": null,
+    "qualidade": "4,22 detecções/frame",
+    "complexidade": "janela deslizante, pirâmide fina",
+    "fonte": "TP3 ex1a.py"
+  },
+  {
+    "etapa": "Detecção clássica",
+    "tecnica": "HOG+SVM treinado por nós",
+    "ms": 5800.0,
+    "memoria_mb": null,
+    "qualidade": "precisão 0,89 e F1 0,64 com hard negatives",
+    "complexidade": "treino próprio + janela deslizante",
+    "fonte": "TP3 ex1b.py"
+  },
+  {
+    "etapa": "Detecção clássica",
+    "tecnica": "Haar Cascade (rostos)",
+    "ms": null,
+    "memoria_mb": null,
+    "qualidade": "0 rostos em cena de vigilância a 40 m",
+    "complexidade": "cascata de classificadores fracos",
+    "fonte": "AT ex2b.ipynb"
+  },
+  {
+    "etapa": "Subtração de fundo",
+    "tecnica": "MOG2",
+    "ms": 4.48,
+    "memoria_mb": null,
+    "qualidade": "4,28 objetos/frame (223 FPS)",
+    "complexidade": "modelo de mistura por pixel",
+    "fonte": "TP3 ex2a.py"
+  },
+  {
+    "etapa": "Subtração de fundo",
+    "tecnica": "KNN",
+    "ms": 3.66,
+    "memoria_mb": null,
+    "qualidade": "4,39 objetos/frame (273 FPS)",
+    "complexidade": "vizinhos por pixel",
+    "fonte": "TP3 ex2a.py"
+  },
+  {
+    "etapa": "Classificação",
+    "tecnica": "MLP no MNIST",
+    "ms": null,
+    "memoria_mb": null,
+    "qualidade": "98,00% de acurácia, 535.818 parâmetros",
+    "complexidade": "2 camadas densas",
+    "fonte": "TP3 ex3a.py"
+  },
+  {
+    "etapa": "Classificação",
+    "tecnica": "CNN no MNIST",
+    "ms": null,
+    "memoria_mb": null,
+    "qualidade": "99,41% de acurácia, 421.642 parâmetros",
+    "complexidade": "2 blocos convolucionais",
+    "fonte": "TP3 ex3a.py"
+  },
+  {
+    "etapa": "Classificação",
+    "tecnica": "MobileNetV2 fine-tuned (gênero)",
+    "ms": 14.63,
+    "memoria_mb": 11.6,
+    "qualidade": "90,67% de acurácia em 150 rostos",
+    "complexidade": "transfer learning, 10 épocas",
+    "fonte": "TP3 ex4b.py"
+  },
+  {
+    "etapa": "Classificação",
+    "tecnica": "Caffe gender_net",
+    "ms": 8.19,
+    "memoria_mb": 45.7,
+    "qualidade": "88,00% de acurácia",
+    "complexidade": "rede pronta, sem treino",
+    "fonte": "TP3 ex4b.py"
+  },
+  {
+    "etapa": "Classificação",
+    "tecnica": "MobileNetV2 via OpenCV DNN (TFLite)",
+    "ms": 7.06,
+    "memoria_mb": 81.8,
+    "qualidade": "91,7% top-1 e 100% top-3 em 12 imagens",
+    "complexidade": "3.538.984 parâmetros",
+    "fonte": "AT ex2a.py"
+  },
+  {
+    "etapa": "Classificação",
+    "tecnica": "MobileNetV2 via Keras/TensorFlow",
+    "ms": 13.87,
+    "memoria_mb": 437.0,
+    "qualidade": "mesma acurácia do OpenCV DNN",
+    "complexidade": "mesma rede, outro runtime",
+    "fonte": "AT ex2a.py"
+  },
+  {
+    "etapa": "Detecção profunda",
+    "tecnica": "YOLOv4-tiny (416x416)",
+    "ms": 40.6,
+    "memoria_mb": 23.1,
+    "qualidade": "24,6 FPS; confiança média 80,4%; 6,98 objetos/frame",
+    "complexidade": "6.062.826 parâmetros",
+    "fonte": "AT ex3a.py (300 frames)"
+  },
+  {
+    "etapa": "Detecção profunda",
+    "tecnica": "YOLOv4-tiny (320x320)",
+    "ms": 31.3,
+    "memoria_mb": 23.1,
+    "qualidade": "31,9 FPS; 5,22 objetos/frame",
+    "complexidade": "mesma rede, entrada menor",
+    "fonte": "AT ex3a.py (varredura)"
+  },
+  {
+    "etapa": "Detecção profunda",
+    "tecnica": "SSD MobileNetV2 (300x300)",
+    "ms": 32.2,
+    "memoria_mb": 66.6,
+    "qualidade": "31,1 FPS; confiança média 72,3%; 7,74 objetos/frame",
+    "complexidade": "16.876.287 parâmetros",
+    "fonte": "AT ex3a.py (300 frames)"
+  },
+  {
+    "etapa": "Rastreamento",
+    "tecnica": "IoU + ID persistente (sobre YOLO)",
+    "ms": 36.3,
+    "memoria_mb": null,
+    "qualidade": "27,6 FPS; 98 IDs; 10,19 ID switches/min",
+    "complexidade": "associação gulosa O(t*d)",
+    "fonte": "AT ex3b.py (795 frames)"
+  },
+  {
+    "etapa": "Rastreamento",
+    "tecnica": "CamShift",
+    "ms": null,
+    "memoria_mb": null,
+    "qualidade": "perdeu o alvo no frame 275",
+    "complexidade": "deslocamento de média sobre histograma",
+    "fonte": "TP3 ex2a.py"
+  },
+  {
+    "etapa": "Segmentação",
+    "tecnica": "DeepLabV3-ResNet50 (VOC)",
+    "ms": 951.0,
+    "memoria_mb": 538.0,
+    "qualidade": "93,9% dos pixels caem em 'fundo' nas cenas externas",
+    "complexidade": "ResNet50 + ASPP",
+    "fonte": "AT ex4a.py (7 cenas)"
+  },
+  {
+    "etapa": "Segmentação",
+    "tecnica": "FCN-ResNet50 (VOC)",
+    "ms": 777.0,
+    "memoria_mb": 538.0,
+    "qualidade": "99,4% de concordância com o DeepLabV3",
+    "complexidade": "ResNet50 + cabeça FCN",
+    "fonte": "AT ex4a.py (7 cenas)"
+  }
+]

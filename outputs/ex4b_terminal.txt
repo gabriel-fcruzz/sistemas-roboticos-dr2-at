@@ -1,0 +1,63 @@
+
+====================================================================
+1) DIAGRAMA DO PIPELINE
+====================================================================
+gerado: outputs\ex4b_diagrama_pipeline.png
+
+====================================================================
+2) TABELA CONSOLIDADA DE MÉTRICAS
+====================================================================
++--------------------+--------------------------------------+------------+--------------------+------------------------------------+
+| etapa              | técnica                              | tempo (ms) | memória/disco (MB) | fonte                              |
++--------------------+--------------------------------------+------------+--------------------+------------------------------------+
+| Pré-processamento  | Segmentação HSV + morfologia         | 2.28       | -                  | AT ex2b.ipynb (média de 30 frames) |
+| Pré-processamento  | Segmentação HSV da via (asfalto)     | 3.40       | -                  | AT ex4a.py (cena campus_via)       |
+| Calibração         | calibrateCamera (24 imagens)         | -          | -                  | AT ex1a.py                         |
+| Calibração         | undistort por frame                  | 6.45       | -                  | AT ex2b.ipynb                      |
+| Pose               | solvePnP + projectPoints (tabuleiro) | 0.27       | -                  | AT ex1b.py                         |
+| Características    | ORB (1000 keypoints)                 | 5.75       | -                  | TP2 ex3a.py                        |
+| Características    | AKAZE                                | 29.40      | -                  | TP2 ex3a.py                        |
+| Características    | SIFT                                 | 52.40      | -                  | TP2 ex3a.py                        |
+| Detecção clássica  | HOG+SVM pré-treinado (rápido)        | 24.90      | -                  | TP3 ex1a.py                        |
+| Detecção clássica  | HOG+SVM pré-treinado (preciso)       | 202.30     | -                  | TP3 ex1a.py                        |
+| Detecção clássica  | HOG+SVM treinado por nós             | 5800.00    | -                  | TP3 ex1b.py                        |
+| Detecção clássica  | Haar Cascade (rostos)                | -          | -                  | AT ex2b.ipynb                      |
+| Subtração de fundo | MOG2                                 | 4.48       | -                  | TP3 ex2a.py                        |
+| Subtração de fundo | KNN                                  | 3.66       | -                  | TP3 ex2a.py                        |
+| Classificação      | MLP no MNIST                         | -          | -                  | TP3 ex3a.py                        |
+| Classificação      | CNN no MNIST                         | -          | -                  | TP3 ex3a.py                        |
+| Classificação      | MobileNetV2 fine-tuned (gênero)      | 14.63      | 11.6               | TP3 ex4b.py                        |
+| Classificação      | Caffe gender_net                     | 8.19       | 45.7               | TP3 ex4b.py                        |
+| Classificação      | MobileNetV2 via OpenCV DNN (TFLite)  | 7.06       | 81.8               | AT ex2a.py                         |
+| Classificação      | MobileNetV2 via Keras/TensorFlow     | 13.87      | 437.0              | AT ex2a.py                         |
+| Detecção profunda  | YOLOv4-tiny (416x416)                | 40.60      | 23.1               | AT ex3a.py (300 frames)            |
+| Detecção profunda  | YOLOv4-tiny (320x320)                | 31.30      | 23.1               | AT ex3a.py (varredura)             |
+| Detecção profunda  | SSD MobileNetV2 (300x300)            | 32.20      | 66.6               | AT ex3a.py (300 frames)            |
+| Rastreamento       | IoU + ID persistente (sobre YOLO)    | 36.30      | -                  | AT ex3b.py (795 frames)            |
+| Rastreamento       | CamShift                             | -          | -                  | TP3 ex2a.py                        |
+| Segmentação        | DeepLabV3-ResNet50 (VOC)             | 951.00     | 538.0              | AT ex4a.py (7 cenas)               |
+| Segmentação        | FCN-ResNet50 (VOC)                   | 777.00     | 538.0              | AT ex4a.py (7 cenas)               |
++--------------------+--------------------------------------+------------+--------------------+------------------------------------+
+
+27 técnicas catalogadas; detalhes em outputs/ex4b_metricas.md
+
+====================================================================
+3) CUSTO POR TÉCNICA
+====================================================================
+gerado: outputs\ex4b_grafico_custo.png
+
+técnicas que caberiam em 100 ms numa placa 8x mais lenta: 9
+  Segmentação HSV + morfologia; Segmentação HSV da via (asfalto); undistort por frame; solvePnP + projectPoints (tabuleiro); ORB (1000 keypoints); MOG2; KNN; Caffe gender_net; MobileNetV2 via OpenCV DNN (TFLite)
+técnicas que passariam de 1 s nessa mesma placa: 4
+  HOG+SVM pré-treinado (preciso); HOG+SVM treinado por nós; DeepLabV3-ResNet50 (VOC); FCN-ResNet50 (VOC)
+
+====================================================================
+4) VERIFICAÇÃO DO RELATÓRIO INTEGRATIVO
+====================================================================
+arquivo            : relatorio_integrativo.md
+palavras           : 2397 (OK)
+seções obrigatórias: 5 de 5 presentes
+técnicas com dado real citadas: 18 (OK, mínimo é 4)
+valores numéricos no texto     : 108
+
+status: aprovado no checklist

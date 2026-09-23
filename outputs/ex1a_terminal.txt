@@ -1,0 +1,152 @@
+
+====================================================================
+1) GERAÇÃO DAS IMAGENS DE CALIBRAÇÃO
+====================================================================
+24 imagens 1280x720 geradas em data/tabuleiro/
+Padrão: 7x6 cantos internos, quadrado de 30 mm
+
+====================================================================
+2) DETECÇÃO DOS CANTOS (findChessboardCorners + cornerSubPix)
+====================================================================
+  calib_01.png: cantos encontrados
+  calib_02.png: cantos encontrados
+  calib_03.png: cantos encontrados
+  calib_04.png: cantos encontrados
+  calib_05.png: cantos encontrados
+  calib_06.png: cantos encontrados
+  calib_07.png: cantos encontrados
+  calib_08.png: cantos encontrados
+  calib_09.png: cantos encontrados
+  calib_10.png: cantos encontrados
+  calib_11.png: cantos encontrados
+  calib_12.png: cantos encontrados
+  calib_13.png: cantos encontrados
+  calib_14.png: cantos encontrados
+  calib_15.png: cantos encontrados
+  calib_16.png: cantos encontrados
+  calib_17.png: cantos encontrados
+  calib_18.png: cantos encontrados
+  calib_19.png: cantos encontrados
+  calib_20.png: cantos encontrados
+  calib_21.png: cantos encontrados
+  calib_22.png: cantos encontrados
+  calib_23.png: cantos encontrados
+  calib_24.png: cantos encontrados
+
+Tabuleiro detectado em 24/24 imagens.
+
+====================================================================
+3) CALIBRAÇÃO (calibrateCamera)
+====================================================================
+Matriz intrínseca K (pixels):
+[[900.7037   0.     639.7359]
+ [  0.     910.68   360.0832]
+ [  0.       0.       1.    ]]
+
+  fx =   900.7037 px   distância focal horizontal
+  fy =   910.6800 px   distância focal vertical
+  cx =   639.7359 px   ponto principal em x
+  cy =   360.0832 px   ponto principal em y
+  razão de aspecto fy/fx = 1.01108 (≈1 indica pixels quadrados)
+
+Coeficientes de distorção [k1, k2, p1, p2, k3]:
+  k1 =  -0.26004981   radial de 2ª ordem (efeito barril se < 0)
+  k2 =   0.07481746   radial de 4ª ordem
+  p1 =   0.00110659   tangencial (lente descentrada)
+  p2 =  -0.00073221   tangencial
+  k3 =   0.01088778   radial de 6ª ordem (relevante em grande-angular)
+
+====================================================================
+4) ERRO DE REPROJEÇÃO
+====================================================================
+  calib_01.png: 0.0087 px
+  calib_02.png: 0.0177 px
+  calib_03.png: 0.0276 px
+  calib_04.png: 0.0257 px
+  calib_05.png: 0.0158 px
+  calib_06.png: 0.0146 px
+  calib_07.png: 0.0197 px
+  calib_08.png: 0.0127 px
+  calib_09.png: 0.0132 px
+  calib_10.png: 0.0241 px
+  calib_11.png: 0.0123 px
+  calib_12.png: 0.0200 px
+  calib_13.png: 0.0134 px
+  calib_14.png: 0.0256 px
+  calib_15.png: 0.0372 px
+  calib_16.png: 0.0136 px
+  calib_17.png: 0.0122 px
+  calib_18.png: 0.0145 px
+  calib_19.png: 0.0246 px
+  calib_20.png: 0.0228 px
+  calib_21.png: 0.0337 px
+  calib_22.png: 0.0341 px
+  calib_23.png: 0.0098 px
+  calib_24.png: 0.0303 px
+
+  RMS global do calibrateCamera : 0.1408 px
+  Erro médio de reprojeção      : 0.0202 px
+  Pior imagem                   : calib_15.png (0.0372 px)
+  Melhor imagem                 : calib_01.png (0.0087 px)
+  Classificação para uso robótico: EXCELENTE - adequado a odometria visual, SLAM e estéreo
+
+====================================================================
+5) ESTIMADO vs. VERDADEIRO (possível por ser câmera virtual)
+====================================================================
+K verdadeira:
+[[900.   0. 640.]
+ [  0. 910. 360.]
+ [  0.   0.   1.]]
+
+Diferença K_estimada - K_verdadeira:
+[[ 0.7037  0.     -0.2641]
+ [ 0.      0.68    0.0832]
+ [ 0.      0.      0.    ]]
+  erro relativo em fx: 0.0782%
+  erro relativo em fy: 0.0747%
+  erro relativo em cx: 0.0413%
+  erro relativo em cy: 0.0231%
+
+Coeficientes de distorção (verdadeiro -> estimado):
+  k1: -0.260000 -> -0.260050   (erro 0.000050)
+  k2: +0.090000 -> +0.074817   (erro 0.015183)
+  p1: +0.001200 -> +0.001107   (erro 0.000093)
+  p2: -0.000800 -> -0.000732   (erro 0.000068)
+  k3: -0.015000 -> +0.010888   (erro 0.025888)
+
+Erro do modelo de distorção (o que de fato importa):
+  discordância RMS entre modelo estimado e verdadeiro: 0.2820 px
+  discordância máxima no quadro                      : 1.2710 px
+  discordância média no terço periférico             : 0.2411 px
+  Obs.: k2 e k3 podem divergir muito do valor verdadeiro sem prejuízo,
+        pois são correlacionados; o efeito combinado é o que vale.
+
+====================================================================
+5b) IMPACTO DA COBERTURA DO CAMPO DE VISÃO
+====================================================================
++-----------------------+------+-------------------+-----------------+----------------------+-------------+
+| conjunto              | imgs | erro reproj. (px) | modelo RMS (px) | modelo na borda (px) | erro fx (%) |
++-----------------------+------+-------------------+-----------------+----------------------+-------------+
+| 18 poses centrais     | 18   | 0.0182            | 14.629          | 27.485               | 0.0873      |
+| + 6 poses periféricas | 24   | 0.0202            | 0.282           | 0.241                | 0.0782      |
++-----------------------+------+-------------------+-----------------+----------------------+-------------+
+
+Leitura: o erro de reprojeção mal se altera, mas o erro do modelo de
+distorção na periferia cai de forma expressiva. Em um robô, isso é a
+diferença entre medir bem no centro da imagem e medir bem em toda ela,
+onde normalmente aparecem os obstáculos laterais.
+
+====================================================================
+6) CORREÇÃO DA DISTORÇÃO (undistort) E PAINEL COMPARATIVO
+====================================================================
+Imagem usada: calib_01.png
+Diferença máxima de intensidade entre original e corrigida: 255/255
+
+====================================================================
+ARQUIVOS GERADOS
+====================================================================
+  outputs/ex1a_painel_original_corrigida.png
+  outputs/ex1a_diferenca_undistort.png
+  outputs/ex1a_erro_reprojecao.png
+  outputs/ex1a_cobertura_cantos.png
+  camera_calibrada.npz  (K e dist reutilizados pelo ex1b e ex2b)

@@ -1,0 +1,28 @@
+# Ambiente do AT — DR2 (Sistemas Robóticos)
+# Python 3.13 em Windows 11. Versões efetivamente usadas nas medições.
+#
+# ATENÇÃO À VERSÃO DO OPENCV: o OpenCV 5.x removeu cv2.HOGDescriptor,
+# cv2.CascadeClassifier e os rastreadores do módulo principal, que o
+# Exercício 2B usa. O limite <5 é obrigatório.
+opencv-python>=4.10,<5
+numpy
+
+# Exercício 2A (MobileNetV2 no Keras e conversão para TFLite)
+tensorflow>=2.16
+
+# Exercício 4A (DeepLabV3 e FCN-ResNet50).
+# Instalação recomendada (roda em CPU, sem CUDA):
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+torch
+torchvision
+
+# Medição de memória por processo (Exercícios 2A e 4A)
+psutil
+
+# Gráficos dos exercícios 1A, 2B e 4B
+matplotlib
+
+# Notebook do Exercício 2B
+notebook
+nbconvert
+ipykernel

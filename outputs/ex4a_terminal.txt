@@ -1,0 +1,164 @@
+
+====================================================================
+1) MODELOS DE SEGMENTAÇÃO SEMÂNTICA
+====================================================================
+classes do vocabulário: 21
+classes: __background__, aeroplane, bicycle, bird, boat, bottle, bus, car, cat, chair, cow, diningtable, dog, horse, motorbike, person, pottedplant, sheep, sofa, train, tvmonitor
+
+memória do processo: 205 MB -> 739 MB (+534 MB com os dois modelos carregados)
+
+Ausentes do vocabulário e essenciais para um veículo autônomo:
+  pista, calçada, faixa de pedestre, poste, prédio, vegetação,
+  semáforo (como região), placa de trânsito.
+
+====================================================================
+2) SEGMENTAÇÃO DAS CENAS
+====================================================================
+
+--- campus_gramado  (520x390)
+  DeepLabV3-ResNet50      1002 ms  __background__ 96.7%, person 2.6%, car 0.6%
+  FCN-ResNet50             800 ms  __background__ 97.0%, person 2.6%, car 0.4%
+  HSV (via por cor)        4.9 ms  região selecionada: 31.0% da imagem
+  concordância DeepLabV3 vs FCN: 99.6% dos pixels
+
+--- campus_passeio  (520x390)
+  DeepLabV3-ResNet50       964 ms  __background__ 98.1%, person 1.3%, car 0.6%
+  FCN-ResNet50             770 ms  __background__ 98.5%, person 1.2%, car 0.3%
+  HSV (via por cor)        3.3 ms  região selecionada: 31.3% da imagem
+  concordância DeepLabV3 vs FCN: 99.6% dos pixels
+
+--- campus_via  (520x390)
+  DeepLabV3-ResNet50       958 ms  __background__ 97.6%, person 1.9%, car 0.5%
+  FCN-ResNet50             847 ms  __background__ 97.9%, person 1.9%, car 0.3%
+  HSV (via por cor)        2.4 ms  região selecionada: 30.8% da imagem
+  concordância DeepLabV3 vs FCN: 99.4% dos pixels
+
+--- park_bench  (500x334)
+  DeepLabV3-ResNet50       860 ms  __background__ 100.0%
+  FCN-ResNet50             674 ms  __background__ 100.0%
+  HSV (via por cor)        2.3 ms  região selecionada: 14.9% da imagem
+  concordância DeepLabV3 vs FCN: 100.0% dos pixels
+
+--- school_bus  (500x334)
+  DeepLabV3-ResNet50       829 ms  __background__ 64.8%, bus 34.7%, car 0.5%
+  FCN-ResNet50             660 ms  __background__ 72.4%, bus 27.0%, car 0.6%
+  HSV (via por cor)        2.5 ms  região selecionada: 7.7% da imagem
+  concordância DeepLabV3 vs FCN: 91.9% dos pixels
+
+--- street_sign  (500x353)
+  DeepLabV3-ResNet50       902 ms  __background__ 100.0%
+  FCN-ResNet50             732 ms  __background__ 100.0%
+  HSV (via por cor)        3.4 ms  região selecionada: 0.8% da imagem
+  concordância DeepLabV3 vs FCN: 100.0% dos pixels
+
+--- traffic_light  (375x500)
+  DeepLabV3-ResNet50       925 ms  __background__ 100.0%
+  FCN-ResNet50             767 ms  __background__ 100.0%
+  HSV (via por cor)        3.9 ms  região selecionada: 3.4% da imagem
+  concordância DeepLabV3 vs FCN: 100.0% dos pixels
+
+====================================================================
+3) CUSTO COMPUTACIONAL
+====================================================================
++----------------+----------------+----------+----------+----------------------------+
+| cena           | DeepLabV3 (ms) | FCN (ms) | HSV (ms) | quanto a rede é mais lenta |
++----------------+----------------+----------+----------+----------------------------+
+| campus_gramado | 1002           | 800      | 4.9      | 206x                       |
+| campus_passeio | 964            | 770      | 3.3      | 290x                       |
+| campus_via     | 958            | 847      | 2.4      | 404x                       |
+| park_bench     | 860            | 674      | 2.3      | 373x                       |
+| school_bus     | 829            | 660      | 2.5      | 329x                       |
+| street_sign    | 902            | 732      | 3.4      | 269x                       |
+| traffic_light  | 925            | 767      | 3.9      | 236x                       |
++----------------+----------------+----------+----------+----------------------------+
+
+====================================================================
+4) QUANTO DA CENA O VOCABULÁRIO NÃO COBRE
+====================================================================
++----------------+-------------------------+----------------------------+------------------+
+| cena           | pixels como 'fundo' (%) | pixels com classe útil (%) | via pelo HSV (%) |
++----------------+-------------------------+----------------------------+------------------+
+| campus_gramado | 96.7                    | 3.3                        | 31.0             |
+| campus_passeio | 98.1                    | 1.9                        | 31.3             |
+| campus_via     | 97.6                    | 2.4                        | 30.8             |
+| park_bench     | 100.0                   | 0.0                        | 14.9             |
+| school_bus     | 64.8                    | 35.2                       | 7.7              |
+| street_sign    | 100.0                   | 0.0                        | 0.8              |
+| traffic_light  | 100.0                   | 0.0                        | 3.4              |
++----------------+-------------------------+----------------------------+------------------+
+
+Média de pixels rotulados como fundo: 93.9%.
+Em cena de rua, quase tudo que importa para dirigir (asfalto,
+calçada, faixa, guia, prédio) cai nesse 'fundo'. A segmentação
+semântica não está errada: o vocabulário é que é de objetos, não de
+cena urbana. É exatamente por isso que veículos autônomos usam
+modelos treinados em Cityscapes, BDD100K ou Mapillary.
+
+====================================================================
+5) DISCUSSÃO: COR (TP1) vs. SEGMENTAÇÃO SEMÂNTICA
+====================================================================
+SEGMENTAÇÃO POR COR (HSV, TP1)
+  Vantagens
+    - Custo: uma conversão de espaço de cor, uma limiarização e morfologia.
+      Medimos abaixo de 5 ms por imagem em CPU, contra centenas de ms da rede;
+      roda em microcontrolador, sem acelerador e sem framework.
+    - Determinística e auditável: o resultado é explicado por seis números
+      (limites de H, S e V). Quando erra, sabe-se exatamente por quê e o ajuste
+      é imediato.
+    - Latência constante, independente do conteúdo da cena — propriedade
+      valiosa em sistema de tempo real com prazo rígido.
+  Limitações
+    - Não tem noção de objeto: seleciona pixels, não coisas. Asfalto, telhado
+      de zinco, sombra na calçada e carro cinza caem na mesma faixa.
+    - Frágil a iluminação: a faixa calibrada ao meio-dia falha ao anoitecer, na
+      chuva e contra o sol.
+    - Não generaliza: cada cenário novo exige recalibrar limiares à mão.
+
+SEGMENTAÇÃO SEMÂNTICA (DeepLabV3 / FCN)
+  Vantagens
+    - Decide por contexto e forma, não por cor: um pedestre de roupa escura
+      contra asfalto escuro continua sendo separado, o que a cor não faz.
+    - Fronteira densa por pixel, e não caixa: dá para estimar área livre
+      navegável, e não apenas "há um obstáculo em algum lugar desta caixa".
+    - Transferível: trocar o vocabulário é trocar o conjunto de treino, sem
+      reescrever o algoritmo.
+  Limitações
+    - Custo: duas a três ordens de grandeza acima do HSV nesta medição, com uso
+      de memória de centenas de MB. Em 5 W, exige quantização, poda,
+      arquitetura leve ou NPU dedicada.
+    - Vocabulário fechado: só enxerga o que existe no conjunto de treino, como
+      este exercício mostra numericamente com a fração de "fundo".
+    - Falha silenciosa fora do domínio: entrega uma máscara plausível mesmo
+      quando erra, sem sinalizar baixa confiança, o que é perigoso em cena
+      noturna, com neve ou com objeto inédito na via.
+    - Latência variável com a carga do sistema, o que complica garantia de prazo.
+
+PARA UM VEÍCULO AUTÔNOMO, QUAL USAR
+Não é escolha exclusiva, e sim divisão de papéis por criticidade e prazo:
+  - segmentação semântica (ou panóptica) como camada principal de compreensão
+    de cena, rodando em acelerador, definindo área navegável, calçada, faixa e
+    agentes;
+  - técnicas clássicas de cor e morfologia como camada rápida e verificável
+    para alvos de cor normatizada, onde a cor é a própria informação: cone de
+    obra, faixa amarela, luz de freio, estado do semáforo;
+  - detecção por caixas (Exercício 3) para agentes que exigem rastreamento e
+    previsão de trajetória, porque caixa com ID é mais barata de associar no
+    tempo que máscara por pixel;
+  - e, acima de tudo, redundância: o classificador de cor serve de sanidade
+    para a rede. Divergência forte entre as duas camadas é um sinal utilizável
+    para reduzir velocidade ou pedir intervenção, em vez de confiar em uma
+    máscara que pode estar plausivelmente errada.
+
+====================================================================
+ARQUIVOS GERADOS
+====================================================================
+  outputs/ex4a_painel_campus_gramado.png   (painel 2x2 comparativo)
+  outputs/ex4a_painel_campus_passeio.png   (painel 2x2 comparativo)
+  outputs/ex4a_painel_campus_via.png   (painel 2x2 comparativo)
+  outputs/ex4a_painel_park_bench.png   (painel 2x2 comparativo)
+  outputs/ex4a_painel_school_bus.png   (painel 2x2 comparativo)
+  outputs/ex4a_painel_street_sign.png   (painel 2x2 comparativo)
+  outputs/ex4a_painel_traffic_light.png   (painel 2x2 comparativo)
+  outputs/ex4a_overlay_<cena>.png  (máscara semitransparente)
+  outputs/ex4a_mapa_<cena>.png     (mapa de classes colorido)
+  outputs/ex4a_tabelas.md

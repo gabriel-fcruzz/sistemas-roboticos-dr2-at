@@ -1,0 +1,136 @@
+
+====================================================================
+CONFIGURAÇÃO
+====================================================================
+vídeo                  : vtest.avi (768x576, 15 fps)
+frames processados     : 795
+detector               : YOLOv4-tiny (conf >= 0.4, NMS = 0.4)
+classe rastreada       : person
+linhas de contagem     : vertical em x=614, horizontal em y=190
+limiar de IoU          : 0.3
+trilha                 : últimos 30 frames
+confirmação / paciência: 3 acertos / 8 falhas
+
+processando...
+   100/795 | 5 ativos | 8 IDs | 0 switches
+   200/795 | 7 ativos | 28 IDs | 2 switches
+   300/795 | 6 ativos | 42 IDs | 4 switches
+   400/795 | 4 ativos | 52 IDs | 5 switches
+   500/795 | 5 ativos | 63 IDs | 7 switches
+   600/795 | 6 ativos | 75 IDs | 9 switches
+   700/795 | 7 ativos | 88 IDs | 9 switches
+
+====================================================================
+RESULTADOS DO RASTREAMENTO
+====================================================================
++------------------------------------------+-------+
+| métrica                                  | valor |
++------------------------------------------+-------+
+| frames processados                       | 795   |
+| duração do vídeo (s)                     | 53.0  |
+| pedestres por frame (média)              | 5.97  |
+| pedestres por frame (máximo)             | 11    |
+| contagem cumulativa de IDs únicos        | 98    |
+| entradas detectadas                      | 98    |
+| saídas detectadas                        | 91    |
+| linha vertical: cruzamentos esq->dir     | 14    |
+| linha vertical: cruzamentos dir->esq     | 19    |
+| linha horizontal: cruzamentos para baixo | 21    |
+| linha horizontal: cruzamentos para cima  | 24    |
+| total de cruzamentos contados            | 78    |
+| ID switches estimados                    | 9     |
+| ID switches por minuto                   | 10.19 |
+| latência média por frame (ms)            | 42.6  |
+| FPS médio (detecção + rastreamento)      | 23.5  |
++------------------------------------------+-------+
+
+Duração das trilhas confirmadas: média 48.5 frames (3.2 s), mediana 30, máximo 230
+Trilhas com menos de 1 segundo de vida: 16 de 98 (16%) — indicador de fragmentação.
+
+====================================================================
+COMO A TAXA DE ID SWITCHES FOI ESTIMADA
+====================================================================
+Não existe anotação de identidade para este vídeo, então não é possível calcular
+a métrica formal de ID switches (a do padrão MOT, que exige o ID verdadeiro de
+cada pessoa em cada frame). O que medimos é um ESTIMADOR por reaparecimento:
+conta-se um switch quando uma trilha é encerrada e, em até poucos frames, nasce
+outra com IoU >= 0.30 em relação à última caixa da trilha morta. O caso típico é
+a pessoa que passa atrás de um obstáculo e volta como ID novo.
+
+O estimador tem viés conhecido e declarado:
+  - SUBESTIMA a troca clássica entre duas pessoas que se cruzam, porque nessa
+    situação nenhuma trilha morre: os IDs simplesmente se trocam entre si;
+  - SUPERESTIMA quando uma pessoa realmente sai de cena e outra entra pelo mesmo
+    ponto pouco depois, o que é comum em corredor ou porta.
+Por isso o número deve ser lido como uma taxa de FRAGMENTAÇÃO de trilha, útil
+para comparar configurações do próprio rastreador (limiar de IoU, paciência,
+com e sem Kalman), e não como acurácia absoluta de identidade.
+
+====================================================================
+APLICAÇÃO: CONTAGEM DE PEDESTRES POR DRONE DE VIGILÂNCIA URBANA
+====================================================================
+VIABILIDADE TÉCNICA
+O pipeline deste item é, em essência, o que um drone de monitoramento urbano
+executaria: detector de estágio único, associação temporal leve e contagem por
+linha virtual. As métricas medidas aqui dizem o que precisaria mudar:
+
+  - a contagem cumulativa herda todo erro do rastreador. Com a fragmentação
+    medida acima, a contagem de pessoas ÚNICAS fica superestimada, porque cada
+    perda de identidade cria um "novo" pedestre. Para contagem de fluxo, a
+    contagem por cruzamento de linha é mais robusta que a contagem de IDs;
+  - câmera em movimento é o caso mais difícil: o drone se desloca, então a
+    premissa de sobreposição entre frames consecutivos enfraquece. A correção
+    usual é compensar o movimento da câmera (homografia entre frames, como no
+    TP2) antes de associar, ou usar filtro de Kalman com modelo de velocidade;
+  - vista de cima muda a aparência do pedestre. Detector treinado em COCO, com
+    fotos em nível do solo, degrada em vista aérea; seria necessário treinar ou
+    ajustar com imagens da própria altura de voo;
+  - iluminação, chuva e sombra alteram a taxa de detecção ao longo do dia, o que
+    exige recalibrar limiares por período, não fixá-los uma vez.
+
+CONSIDERAÇÕES ÉTICAS
+Contar pessoas e identificar pessoas são coisas diferentes, e a fronteira entre
+as duas é uma decisão de projeto, não uma consequência inevitável da tecnologia.
+
+  1. Finalidade e proporcionalidade. Contagem agregada de fluxo para dimensionar
+     calçada, semáforo ou transporte público é finalidade legítima. A mesma
+     câmera, com reconhecimento facial acoplado, passa a ser vigilância
+     individual. A LGPD exige finalidade específica e informada, e minimização:
+     coletar o mínimo necessário para aquela finalidade.
+  2. Minimização de dados por construção. O sistema pode ser projetado para
+     nunca gravar imagem: processa o frame em memória, incrementa contadores e
+     descarta o quadro. O que persiste é "12 pedestres cruzaram no sentido
+     leste entre 14h e 15h", não o rosto de ninguém. Onde a imagem for
+     necessária para auditoria, o caminho é anonimizar em borda (desfoque
+     irreversível de rosto e placa) ANTES de qualquer armazenamento.
+  3. Não identificação e não reidentificação. O ID deste rastreador vale para
+     um único trecho de vídeo e não deve ser reutilizado para religar a mesma
+     pessoa em dias diferentes ou entre câmeras: esse cruzamento transforma
+     contagem em rastreio de rotina individual.
+  4. Viés e erro desigual. Detectores treinados em bases desbalanceadas erram
+     mais para pele escura, crianças, cadeirantes e pessoas com bagagem ou
+     carrinho. Em contagem, isso vira sub-representação sistemática de grupos no
+     dado que orienta política pública. Auditar a taxa de detecção por subgrupo
+     é parte do trabalho de engenharia, não um extra.
+  5. Transparência e consentimento situacional. Em espaço público não há
+     consentimento individual viável, o que aumenta o dever de sinalização
+     clara, publicação da finalidade, do prazo de retenção e do responsável,
+     além de canal para contestação.
+  6. Uso secundário e controle de acesso. O risco maior costuma não estar no
+     algoritmo, mas no depósito de dados: um histórico de trajetórias coletado
+     para "otimizar o trânsito" é atraente para fins policiais, comerciais ou
+     de perseguição. Retenção curta, agregação na origem e registro de acesso
+     são as barreiras técnicas contra o desvio de finalidade.
+  7. Assimetria de poder e efeito inibidor. Vigilância aérea persistente muda o
+     comportamento de quem circula, inclusive o direito de manifestação. A
+     decisão de sobrevoar um bairro não é só técnica: exige participação de quem
+     mora ali.
+
+====================================================================
+ARQUIVOS GERADOS
+====================================================================
+  outputs/ex3b_rastreamento.mp4  (vídeo de demonstração)
+  outputs/ex3b_frame060.png
+  outputs/ex3b_frame200.png
+  outputs/ex3b_frame400.png
+  outputs/ex3b_frame600.png

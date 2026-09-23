@@ -1,0 +1,120 @@
+
+====================================================================
+CONFIGURAÇÃO
+====================================================================
+vídeo            : vtest.avi
+frames avaliados : 300
+confiança mínima : 0.4
+limiar de NMS    : 0.4  (exigido pelo enunciado)
+backend          : cv2.dnn, CPU, para os dois modelos
+
+
+YOLOv4-tiny: passada isolada de 300 frames...
+   50/300 (44 ms/frame)
+   100/300 (41 ms/frame)
+   150/300 (41 ms/frame)
+   200/300 (41 ms/frame)
+   250/300 (43 ms/frame)
+   300/300 (42 ms/frame)
+
+SSD MobileNetV2: passada isolada de 300 frames...
+   50/300 (36 ms/frame)
+   100/300 (34 ms/frame)
+   150/300 (34 ms/frame)
+   200/300 (37 ms/frame)
+   250/300 (36 ms/frame)
+   300/300 (35 ms/frame)
+
+====================================================================
+TABELA COMPARATIVA
+====================================================================
++-----------------+---------+-----------+------------+-----------------+---------------------+------------+--------------+
+| modelo          | entrada | FPS médio | FPS no p95 | inferência (ms) | frame completo (ms) | parâmetros | arquivo (MB) |
++-----------------+---------+-----------+------------+-----------------+---------------------+------------+--------------+
+| YOLOv4-tiny     | 416x416 | 23.7      | 21.5       | 36.3            | 42.2                | 6.062.826  | 23.1         |
+| SSD MobileNetV2 | 300x300 | 28.4      | 25.8       | 33.4            | 35.2                | 16.876.287 | 66.6         |
++-----------------+---------+-----------+------------+-----------------+---------------------+------------+--------------+
+
+Observação: a diferença entre 'inferência' e 'frame completo' é o
+custo de montar o blob, rodar a NMS e desenhar as anotações. É pequena
+aqui, mas em vídeo de alta resolução a montagem do blob deixa de ser
+desprezível, porque envolve redimensionar e reordenar a imagem toda.
+
+====================================================================
+O QUE CADA MODELO ENCONTROU
+====================================================================
+
+YOLOv4-tiny: 2094 detecções em 300 frames (6.98 por frame), confiança média 80.4%
+   classes de trânsito: person=1494, car=300, truck=300
+
+SSD MobileNetV2: 2321 detecções em 300 frames (7.74 por frame), confiança média 72.3%
+   classes de trânsito: person=1691, car=372, truck=226, traffic light=4
+   outras classes     : skis=25, sports ball=3
+
+Concordância entre os dois modelos (mesma classe, IoU >= 0.5): 1823 pares em 2094 detecções do modelo mais conservador (87.1%).
+Sem anotação de referência para este vídeo, não é possível calcular
+precisão nem recall: 'mais detecções' não significa 'melhor', porque
+pode ser recall maior ou falso positivo. A concordância indica o
+núcleo de objetos que os dois confirmam, e as divergências marcam
+exatamente os casos que precisariam de anotação manual para julgar.
+
+====================================================================
+SENSIBILIDADE DO YOLO À RESOLUÇÃO DE ENTRADA
+====================================================================
++---------+-----------------+------+-------------------+-------------------+
+| entrada | inferência (ms) | FPS  | objetos por frame | pessoas por frame |
++---------+-----------------+------+-------------------+-------------------+
+| 256x256 | 15.8            | 63.4 | 0.72              | 0.72              |
+| 320x320 | 22.7            | 44.1 | 5.22              | 3.23              |
+| 416x416 | 39.1            | 25.6 | 7.05              | 5.05              |
+| 512x512 | 53.9            | 18.5 | 7.55              | 5.55              |
++---------+-----------------+------+-------------------+-------------------+
+
+O custo cresce com a área da entrada; o número de objetos cai
+quando os alvos pequenos deixam de ser representáveis na grade.
+
+====================================================================
+CONCLUSÃO: QUAL MODELO PARA ROBÓTICA EMBARCADA
+====================================================================
+Dados coletados nesta máquina (CPU, backend cv2.dnn, mesmos frames, mesmos
+limiares de confiança e de NMS):
+
+1. Velocidade. YOLOv4-tiny roda a 23.7 FPS e SSD MobileNetV2 a
+   28.4 FPS; o SSD MobileNetV2 é 1.20x mais rápido.
+   Nos percentis, o pior caso cai para 21.5 e 25.8 FPS
+   respectivamente. Apenas o SSD MobileNetV2 sustenta 25 FPS no pior caso; o outro fica abaixo, o que em controle de veículo significa atraso de reação nos frames mais cheios de objetos.
+
+2. Tamanho. YOLOv4-tiny: 23.1 MB e 6.062.826 parâmetros.
+   SSD MobileNetV2: 66.6 MB e 16.876.287 parâmetros.
+   O modelo mais leve é o YOLOv4-tiny, com vantagem de
+   43.4 MB em disco. Em placa com flash
+   limitada e sem swap, isso pesa tanto quanto o FPS.
+
+3. Comportamento na cena. YOLOv4-tiny produziu 6.98 detecções por
+   frame, com confiança média de 80.4%; SSD MobileNetV2,
+   7.74 por frame com 72.3%. A confiança mais
+   alta do YOLO indica decisões menos ambíguas nesta cena, o que reduz a
+   oscilação de detecção entre frames consecutivos e facilita o rastreamento
+   feito no item B. A entrada do SSD é fixa em 300x300, contra 416x416 do YOLO:
+   um pedestre que ocupa 60 px de altura no frame original cai para cerca de
+   31 px no SSD e 43 px no YOLO, o que explica parte da diferença de confiança.
+
+4. Recomendação. A diferença de velocidade é de apenas 1.20x, dentro do que se recupera ajustando resolução de entrada ou quantizando, logo ela não decide. Decidem o tamanho e a robustez: o YOLOv4-tiny ocupa 43 MB menos em disco e tem 10.813.461 parâmetros menos; e é também o que decide com confiança média mais alta (80.4% contra 72.3%), o que reduz a oscilação de detecção entre frames e facilita o rastreamento do item B. Some-se que a entrada do YOLO em Darknet é ajustável em tempo de execução, sem reconverter o modelo: pela tabela de sensibilidade, trocar 416 por 320 quase dobra o FPS mantendo a maioria dos pedestres. Por isso a escolha recomendada para robótica embarcada nesta classe de cena é o YOLOv4-tiny. O SSD MobileNetV2 continua preferível quando o alvo é grande e próximo, como um robô de armazém identificando caixas a poucos metros, ou quando o dispositivo já executa TensorFlow Lite quantizado, caso em que sua versão int8 fica bastante eficiente.
+
+5. Ressalva metodológica. FPS medido em desktop não se transfere para o alvo
+   embarcado. O procedimento correto é repetir esta mesma medição na placa
+   final, com o mesmo vídeo, porque a razão entre os dois modelos muda com o
+   conjunto de instruções e com o acelerador disponível.
+
+====================================================================
+ARQUIVOS GERADOS
+====================================================================
+  outputs/ex3a_yolov4tiny.mp4
+  outputs/ex3a_yolov4tiny_frame040.png
+  outputs/ex3a_yolov4tiny_frame120.png
+  outputs/ex3a_yolov4tiny_frame220.png
+  outputs/ex3a_ssd.mp4
+  outputs/ex3a_ssd_frame040.png
+  outputs/ex3a_ssd_frame120.png
+  outputs/ex3a_ssd_frame220.png
+  outputs/ex3a_tabela_comparativa.md
