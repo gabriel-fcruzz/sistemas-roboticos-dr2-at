@@ -1,0 +1,169 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "1A — Calibração da câmera",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex1a.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3"
+      }
+    },
+    {
+      "name": "1B — Realidade aumentada (cubo 3D)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex1b.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3"
+      }
+    },
+    {
+      "name": "2A — OpenCV DNN vs Keras",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex2a.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3"
+      }
+    },
+    {
+      "name": "3A — YOLO vs SSD (completo, ~2 min)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex3a.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3"
+      }
+    },
+    {
+      "name": "3A — YOLO vs SSD (demo rápida, ~40 s)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex3a.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3"
+      },
+      "args": [
+        "--frames",
+        "60"
+      ]
+    },
+    {
+      "name": "3B — Rastreamento com ID (completo, ~1,5 min)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex3b.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3"
+      }
+    },
+    {
+      "name": "3B — Rastreamento com ID (demo rápida, ~20 s)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex3b.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3"
+      },
+      "args": [
+        "--frames",
+        "150"
+      ]
+    },
+    {
+      "name": "4A — Segmentação semântica",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex4a.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3"
+      }
+    },
+    {
+      "name": "4B — Diagrama, métricas e checklist",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex4b.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3"
+      }
+    },
+    {
+      "name": "1B — Realidade aumentada COM JANELA",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex1b.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3",
+        "MOSTRAR_JANELAS": "1"
+      }
+    },
+    {
+      "name": "1A — Calibração COM JANELA",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ex1a.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "justMyCode": true,
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "TF_CPP_MIN_LOG_LEVEL": "3",
+        "MOSTRAR_JANELAS": "1"
+      }
+    }
+  ]
+}
